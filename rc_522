@@ -1,6 +1,10 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Servo.h>
+#include <LiquidCrystal.h>
+
+const int rs = 7, en = 6, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 Servo servo_test;
 int angle = 0;
@@ -17,6 +21,7 @@ void setup()
   Serial.println("Approximate your card to the reader...");
   Serial.println();
   servo_test.attach(8);
+  lcd.begin(16, 2);
 
 }
 void loop() 
@@ -49,13 +54,15 @@ void loop()
   {
     Serial.println("Authorized access");
     Serial.println();
-    delay(1000);
+    lcd.print("Access Granted");
+    lcd.setCursor(0,0);
     for(angle = 0; angle < 90; angle += 90)  
     {                                  
       servo_test.write(angle);
       delay(5000);                       
     } 
-  
+    lcd.clear();
+    lcd.setCursor(0,0);
     for(angle = 90; angle>=1; angle-=90)     
     {                                
       servo_test.write(angle);                                  
@@ -65,6 +72,10 @@ void loop()
   else   
   {
     Serial.println(" Access denied");
+    lcd.print("Access Denied");
     delay(3000);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    
   }
 } 
